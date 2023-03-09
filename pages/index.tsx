@@ -1,30 +1,75 @@
+import axios, { AxiosResponse } from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import  Input  from '@mui/material'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress'
+import { type } from 'os'
+import Box from '@mui/material/Box';
+
+type GenerateDescriptionPayload = {
+  locationName: string,
+  size: string,
+  inhabitants: string,
+  focalPoints: string,
+  trade: string,
+  conflict: string,
+}
+interface GenerateDescriptionResponse {
+  description: string;
+}
 
 export default function Home() {
+  const [description, setDescription] = useState<string | null>();
+  const [locationName, setLocationName] = useState("");
+  const [locationSize, setLocationSize] = useState("");
+  const [locationInhabitants, setLocationInhabitants] = useState("");
+  const [locationFocalPoints, setLocationFocalPoints ] = useState("");
+  const [locationTrade, setLocationTrade ] = useState("");
+  const [locationConflict, setLocationConflict ] = useState("");
+  const [loading, setLoading ] = useState(false);
 
   useEffect(() => {
-    console.log("test");
   }, []);
 
-  /*
-    Name: ${name}
-    Size: ${size}
-    Inhabitants: ${inhabitants}
-    Focal Points: ${focalPoints}
-    Issues: ${issues}
-    Trade: ${trade}
-    Description:
-  */
+  async function fetchDescription(){
+    setLoading(true);
+
+    const requestPayload: GenerateDescriptionPayload = {
+      locationName: locationName,
+      size: locationSize,
+      inhabitants: locationInhabitants,
+      focalPoints: locationFocalPoints,
+      conflict: locationConflict,
+      trade: locationTrade,
+    }
+
+    console.log(requestPayload);
+
+    const response: AxiosResponse<GenerateDescriptionResponse> = await axios.get("/api/description");
+    const description: string = response.data.description;
+    console.log(response.data)
+    setDescription(description);
+    setLoading(false);
+  }
+
+  function Description() {
+    return (
+      <div>
+        { loading ? 
+          <CircularProgress color="secondary" />
+          : <Typography variant="body1">{ description ? description : "" }</Typography>
+        }
+      </div>
+    )
+  }
 
   return (
     <>
@@ -37,28 +82,89 @@ export default function Home() {
       <Container maxWidth="lg">
         <div className={styles.main}>
           <Grid container spacing={2}>
-            <Grid item xs={8}>
+            <Grid item xs={6}>
+              <Box
+                component="form"
+                noValidate
+                autoComplete="off"
+              >
+                <TextField
+                  sx={{ mb: 2, width: 1}}
+                  id="filled-multiline-static"
+                  label="Location Name"
+                  placeholder="Location Name"
+                  variant="filled"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setLocationName(event.target.value);
+                  }}
+                />
+                <TextField
+                  sx={{ mb: 2, width: 1}}
+                  id="filled-multiline-static"
+                  label="Location Size"
+                  multiline
+                  placeholder="Location Size"
+                  variant="filled"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setLocationSize(event.target.value);
+                  }}
+                />
+                <TextField
+                  sx={{ mb: 2, width: 1}}
+                  id="filled-multiline-static"
+                  label="Location Inhabitants"
+                  multiline
+                  rows={4}
+                  placeholder="Location Inhabitants"
+                  variant="filled"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setLocationInhabitants(event.target.value);
+                  }}
+                />
+                <TextField
+                  sx={{ mb: 2, width: 1}}
+                  id="filled-multiline-static"
+                  label="Location Focal Points"
+                  multiline
+                  rows={4}
+                  placeholder="Location Focal Points"
+                  variant="filled"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setLocationFocalPoints(event.target.value);
+                  }}
+                />
+                <TextField
+                  sx={{ mb: 2, width: 1}}
+                  id="filled-multiline-static"
+                  label="Location Trade"
+                  multiline
+                  rows={4}
+                  placeholder="Location Trade"
+                  variant="filled"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setLocationTrade(event.target.value);
+                  }}
+                />
+                <TextField
+                  sx={{ mb: 2, width: 1}}
+                  id="filled-multiline-static"
+                  label="Location Conflict"
+                  multiline
+                  rows={4}
+                  placeholder="Location Conflict"
+                  variant="filled"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setLocationConflict(event.target.value);
+                  }}
+                />
+                <Button variant="outlined" onClick={fetchDescription}>Generate Description</Button>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
               <Typography variant="h4" component="h1" gutterBottom>
                 Prompt
               </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                sx={{ mb: 2, width: 1}}
-                id="filled-multiline-static"
-                label="Input 1"
-                defaultValue="Default Value"
-                variant="filled"
-            />
-              <TextField
-                sx={{ mb: 2, width: 1}}
-                id="filled-multiline-static"
-                label="Multi-line"
-                multiline
-                rows={4}
-                defaultValue="Default Value"
-                variant="filled"
-            />
+              <Description></Description>
             </Grid>
           </Grid>
         </div>
@@ -66,3 +172,9 @@ export default function Home() {
     </>
   )
 }
+
+  // const [locationName, setLocationName] = useState("");
+  // const [locationSize, setLocationSize] = useState("");
+  // const [locationInhabitants, setLocationInhabitants] = useState("");
+  // const [locationTrade, setLocationTrade ] = useState("");
+  // const [loading, setLoading ] = useState(false);
