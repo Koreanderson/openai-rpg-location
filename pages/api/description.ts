@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequestQuery } from 'next/dist/server/api-utils';
 import { Configuration, OpenAIApi } from 'openai';
 import { CreateCompletionRequestPrompt, CreateCompletionResponse } from 'openai';
 
@@ -11,61 +12,64 @@ const initialPromptString = "Write a two paragraph description of a location set
 
 // TODO: Pull arguments into a typed object and move to a util
 
-function generateTownDescriptionPrompt(
+type GenerateDescriptionPayload = {
   name: string,
   size: string,
   inhabitants: string,
   focalPoints: string,
-  issues: string,
-  trade: string
-): CreateCompletionRequestPrompt {
-  return `
-    ${initialPromptString}
-    Name: ${name}
-    Size: ${size}
-    Inhabitants: ${inhabitants}
-    Focal Points: ${focalPoints}
-    Issues: ${issues}
-    Trade: ${trade}
-    Description:
-  `
+  trade: string,
+  conflict: string,
 }
 
 type ResponseData = {
   description: string | undefined
 }
 
-async function fetchCompletionFromPrompt(prompt: CreateCompletionRequestPrompt): Promise<ResponseData> {
-  try {
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: prompt,
-      temperature: 0.8,
-      max_tokens: 256,
-    });
-    const description: string | undefined = response.data.choices[0].text
-    
-    return ({ 
-      "description": description 
-    })
-  } catch (e:any) {
-    throw new Error(`Error: ${e.message}`);
-  }
-
+function generateTownDescriptionPrompt(config: GenerateDescriptionPayload | NextApiRequestQuery): CreateCompletionRequestPrompt {
+  return `
+    ${initialPromptString}
+    Name: ${config.name}
+    Size: ${config.size}
+    Inhabitants: ${config.inhabitants}
+    Focal Points: ${config.focalPoints}
+    Conflict: ${config.conflict}
+    Trade: ${config.trade}
+    Description:
+  `
 }
 
-const prompt: CreateCompletionRequestPrompt = generateTownDescriptionPrompt("Fangorn", "City", "Elves, Goblins", "Central Clock", "Political Strife", "Machinery");
+function fetchCompletionFromPrompt(prompt: CreateCompletionRequestPrompt): Promise<ResponseData> {
+  return openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: prompt,
+    temperature: 0.8,
+    max_tokens: 256,
+  }).then((res) => {
+    const description: string | undefined = res.data.choices[0].text
+    return ({
+      description
+    })
+  }).catch((e) =>{
+    throw new Error("Error: " + e);
+  })
+}
 
-
-
-// Pull into a util
-function getOpenAICompletion() {
-
+function buildResponse(query: NextApiRequestQuery) {
+  const config: NextApiRequestQuery = query
+  const prompt: CreateCompletionRequestPrompt = generateTownDescriptionPrompt(config);
+  return fetchCompletionFromPrompt(prompt)
+    .then((completion) => {
+      return completion;
+    })
+    .catch((e) => {
+      throw new Error("Error: " + e);
+    });
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  res.status(200).json(await fetchCompletionFromPrompt(prompt))
+  const response = await buildResponse(req.query);
+  res.status(200).json(response);
 }

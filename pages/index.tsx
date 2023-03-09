@@ -15,7 +15,7 @@ import { type } from 'os'
 import Box from '@mui/material/Box';
 
 type GenerateDescriptionPayload = {
-  locationName: string,
+  name: string,
   size: string,
   inhabitants: string,
   focalPoints: string,
@@ -42,8 +42,8 @@ export default function Home() {
   async function fetchDescription(){
     setLoading(true);
 
-    const requestPayload: GenerateDescriptionPayload = {
-      locationName: locationName,
+    const params: GenerateDescriptionPayload = {
+      name: locationName,
       size: locationSize,
       inhabitants: locationInhabitants,
       focalPoints: locationFocalPoints,
@@ -51,11 +51,9 @@ export default function Home() {
       trade: locationTrade,
     }
 
-    console.log(requestPayload);
-
-    const response: AxiosResponse<GenerateDescriptionResponse> = await axios.get("/api/description");
+    const response: AxiosResponse<GenerateDescriptionResponse> = await axios.get("/api/description", { params });
     const description: string = response.data.description;
-    console.log(response.data)
+
     setDescription(description);
     setLoading(false);
   }
@@ -172,9 +170,3 @@ export default function Home() {
     </>
   )
 }
-
-  // const [locationName, setLocationName] = useState("");
-  // const [locationSize, setLocationSize] = useState("");
-  // const [locationInhabitants, setLocationInhabitants] = useState("");
-  // const [locationTrade, setLocationTrade ] = useState("");
-  // const [loading, setLoading ] = useState(false);
