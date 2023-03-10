@@ -1,27 +1,27 @@
-import axios, { AxiosResponse } from 'axios'
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import { useEffect, useState } from 'react'
+import axios, { AxiosResponse } from "axios";
+import Head from "next/head";
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import styles from "@/styles/Home.module.css";
+import { useEffect, useState } from "react";
 
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField';
-import CircularProgress from '@mui/material/CircularProgress'
-import { type } from 'os'
-import Box from '@mui/material/Box';
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
+import { type } from "os";
+import Box from "@mui/material/Box";
 
 type GenerateDescriptionPayload = {
-  name: string,
-  size: string,
-  inhabitants: string,
-  focalPoints: string,
-  trade: string,
-  conflict: string,
-}
+  name: string;
+  size: string;
+  inhabitants: string;
+  focalPoints: string;
+  trade: string;
+  conflict: string;
+};
 interface GenerateDescriptionResponse {
   description: string;
 }
@@ -31,15 +31,14 @@ export default function Home() {
   const [locationName, setLocationName] = useState("");
   const [locationSize, setLocationSize] = useState("");
   const [locationInhabitants, setLocationInhabitants] = useState("");
-  const [locationFocalPoints, setLocationFocalPoints ] = useState("");
-  const [locationTrade, setLocationTrade ] = useState("");
-  const [locationConflict, setLocationConflict ] = useState("");
-  const [loading, setLoading ] = useState(false);
+  const [locationFocalPoints, setLocationFocalPoints] = useState("");
+  const [locationTrade, setLocationTrade] = useState("");
+  const [locationConflict, setLocationConflict] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
-  async function fetchDescription(){
+  async function fetchDescription() {
     setLoading(true);
 
     const params: GenerateDescriptionPayload = {
@@ -49,9 +48,10 @@ export default function Home() {
       focalPoints: locationFocalPoints,
       conflict: locationConflict,
       trade: locationTrade,
-    }
+    };
 
-    const response: AxiosResponse<GenerateDescriptionResponse> = await axios.get("/api/description", { params });
+    const response: AxiosResponse<GenerateDescriptionResponse> =
+      await axios.get("/api/description", { params });
     const description: string = response.data.description;
 
     setDescription(description);
@@ -61,12 +61,15 @@ export default function Home() {
   function Description() {
     return (
       <div>
-        { loading ? 
+        {loading ? (
           <CircularProgress color="secondary" />
-          : <Typography variant="body1">{ description ? description : "" }</Typography>
-        }
+        ) : (
+          <Typography variant="body1">
+            {description ? description : ""}
+          </Typography>
+        )}
       </div>
-    )
+    );
   }
 
   return (
@@ -81,13 +84,9 @@ export default function Home() {
         <div className={styles.main}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Box
-                component="form"
-                noValidate
-                autoComplete="off"
-              >
+              <Box component="form" noValidate autoComplete="off">
                 <TextField
-                  sx={{ mb: 2, width: 1}}
+                  sx={{ mb: 2, width: 1 }}
                   id="filled-multiline-static"
                   label="Location Name"
                   placeholder="Location Name"
@@ -97,7 +96,7 @@ export default function Home() {
                   }}
                 />
                 <TextField
-                  sx={{ mb: 2, width: 1}}
+                  sx={{ mb: 2, width: 1 }}
                   id="filled-multiline-static"
                   label="Location Size"
                   multiline
@@ -108,7 +107,7 @@ export default function Home() {
                   }}
                 />
                 <TextField
-                  sx={{ mb: 2, width: 1}}
+                  sx={{ mb: 2, width: 1 }}
                   id="filled-multiline-static"
                   label="Location Inhabitants"
                   multiline
@@ -120,7 +119,7 @@ export default function Home() {
                   }}
                 />
                 <TextField
-                  sx={{ mb: 2, width: 1}}
+                  sx={{ mb: 2, width: 1 }}
                   id="filled-multiline-static"
                   label="Location Focal Points"
                   multiline
@@ -132,7 +131,7 @@ export default function Home() {
                   }}
                 />
                 <TextField
-                  sx={{ mb: 2, width: 1}}
+                  sx={{ mb: 2, width: 1 }}
                   id="filled-multiline-static"
                   label="Location Trade"
                   multiline
@@ -144,7 +143,7 @@ export default function Home() {
                   }}
                 />
                 <TextField
-                  sx={{ mb: 2, width: 1}}
+                  sx={{ mb: 2, width: 1 }}
                   id="filled-multiline-static"
                   label="Location Conflict"
                   multiline
@@ -155,7 +154,9 @@ export default function Home() {
                     setLocationConflict(event.target.value);
                   }}
                 />
-                <Button variant="outlined" onClick={fetchDescription}>Generate Description</Button>
+                <Button variant="outlined" onClick={fetchDescription}>
+                  Generate Description
+                </Button>
               </Box>
             </Grid>
             <Grid item xs={6}>
@@ -168,5 +169,5 @@ export default function Home() {
         </div>
       </Container>
     </>
-  )
+  );
 }
