@@ -13,15 +13,19 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import { type } from "os";
 import Box from "@mui/material/Box";
-
-type GenerateDescriptionPayload = {
+interface GenerateDescriptionPayload {
   name: string;
   size: string;
   inhabitants: string;
   focalPoints: string;
   trade: string;
   conflict: string;
-};
+  enableGuilds: boolean;
+  enableKeyLocations: boolean;
+  enablePopulationSize: boolean;
+  enableDieties: boolean;
+  enableFactions: boolean;
+}
 interface GenerateDescriptionResponse {
   description: string;
 }
@@ -34,6 +38,13 @@ export default function Home() {
   const [locationFocalPoints, setLocationFocalPoints] = useState("");
   const [locationTrade, setLocationTrade] = useState("");
   const [locationConflict, setLocationConflict] = useState("");
+
+  const [enableGuilds, setEnableGuilds] = useState(false);
+  const [enableKeyLocations, setEnableKeyLocations] = useState(false);
+  const [enablePopulationSize, setEnablePopulationSize] = useState(false);
+  const [enableDieties, setEnableDieties] = useState(false);
+  const [enableFactions, setEnableFactions] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {}, []);
@@ -48,6 +59,11 @@ export default function Home() {
       focalPoints: locationFocalPoints,
       conflict: locationConflict,
       trade: locationTrade,
+      enableGuilds,
+      enableKeyLocations,
+      enablePopulationSize,
+      enableDieties,
+      enableFactions,
     };
 
     const response: AxiosResponse<GenerateDescriptionResponse> =
