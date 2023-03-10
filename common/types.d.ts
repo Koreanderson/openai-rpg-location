@@ -11,5 +11,10 @@ interface GenerateDescriptionPayload {
   enableDieties: boolean;
   enableFactions: boolean;
 }
+interface GenerateDescriptionResponse {
+  description: string | any;
+}
 
-export { GenerateDescriptionPayload }
+
+export { GenerateDescriptionPayload, GenerateDescriptionResponse }
+

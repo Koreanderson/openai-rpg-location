@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
-import { GenerateDescriptionPayload } from "@/common/types";
+import { GenerateDescriptionPayload, GenerateDescriptionResponse } from "@/common/types";
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -13,9 +13,6 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import { type } from "os";
 import Box from "@mui/material/Box";
-interface GenerateDescriptionResponse {
-  description: string;
-}
 
 export default function Home() {
   const [description, setDescription] = useState<string | null>();

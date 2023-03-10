@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { NextApiRequestQuery } from "next/dist/server/api-utils";
 import { Configuration, OpenAIApi } from "openai";
-import { GenerateDescriptionPayload } from "@/common/types";
+import { GenerateDescriptionPayload, GenerateDescriptionResponse } from "@/common/types";
 import {
   CreateCompletionRequestPrompt,
   CreateCompletionResponse,
@@ -12,10 +12,6 @@ const configuration = new Configuration({
 });
 
 const openai = new OpenAIApi(configuration);
-
-type ResponseData = {
-  description: string | undefined;
-};
 
 function generateTownDescriptionPrompt(
   config: GenerateDescriptionPayload | NextApiRequestQuery
@@ -71,7 +67,7 @@ function generateTownDescriptionPrompt(
 
 function fetchCompletionFromPrompt(
   prompt: CreateCompletionRequestPrompt
-): Promise<ResponseData> {
+): Promise<GenerateDescriptionResponse> {
   return openai
     .createCompletion({
       model: "text-davinci-003",
@@ -82,7 +78,7 @@ function fetchCompletionFromPrompt(
       max_tokens: 500,
     })
     .then((res) => {
-      const description: string | undefined = res.data.choices[0].text;
+      const description: string | any = res.data.choices[0].text;
       return {
         description,
       };
