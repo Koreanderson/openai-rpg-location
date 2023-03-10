@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import Head from "next/head";
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
+import { GenerateDescriptionPayload } from "@/common/types";
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -13,19 +13,6 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import { type } from "os";
 import Box from "@mui/material/Box";
-interface GenerateDescriptionPayload {
-  name: string;
-  size: string;
-  inhabitants: string;
-  focalPoints: string;
-  trade: string;
-  conflict: string;
-  enableGuilds: boolean;
-  enableKeyLocations: boolean;
-  enablePopulationSize: boolean;
-  enableDieties: boolean;
-  enableFactions: boolean;
-}
 interface GenerateDescriptionResponse {
   description: string;
 }

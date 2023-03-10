@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { NextApiRequestQuery } from "next/dist/server/api-utils";
 import { Configuration, OpenAIApi } from "openai";
+import { GenerateDescriptionPayload } from "@/common/types";
 import {
   CreateCompletionRequestPrompt,
   CreateCompletionResponse,
@@ -11,21 +12,6 @@ const configuration = new Configuration({
 });
 
 const openai = new OpenAIApi(configuration);
-
-// TODO: Pull arguments into a typed object and move to a util
-interface GenerateDescriptionPayload {
-  name: string;
-  size: string;
-  inhabitants: string;
-  focalPoints: string;
-  trade: string;
-  conflict: string;
-  enableGuilds: boolean;
-  enableKeyLocations: boolean;
-  enablePopulationSize: boolean;
-  enableDieties: boolean;
-  enableFactions: boolean;
-}
 
 type ResponseData = {
   description: string | undefined;
