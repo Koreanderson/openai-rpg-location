@@ -73,6 +73,7 @@ function fetchCompletionFromPrompt(
       model: "text-davinci-003",
       prompt: prompt,
       temperature: 1,
+      suffix: "<br>",
       frequency_penalty: 0.5,
       presence_penalty: 0.2,
       max_tokens: 500,
