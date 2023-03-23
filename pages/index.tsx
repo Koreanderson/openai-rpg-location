@@ -79,7 +79,7 @@ export default function Home() {
             height: "100%",
           }}>
             <Typography variant="h3" sx={{ mb: 2 }}>{ title }</Typography>
-            <Typography variant="body1" mx={{ whitespace: 'preline' }}>
+            <Typography variant="body1" mx={{ whiteSpace: 'pre-line' }}>
               {description ? description : ""}
             </Typography>
           </Box>
